@@ -1,5 +1,7 @@
 # nds-shell
+
 [![Build](https://github.com/trustytrojan/nds-shell/actions/workflows/ci.yml/badge.svg)](https://github.com/trustytrojan/nds-shell/actions/workflows/ci.yml)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/trustytrojan/libavz)
 
 A POSIX-like shell & environment for the Nintendo DS.
 
