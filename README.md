@@ -11,7 +11,7 @@ into a standalone auto-booting Cbox chat client for the Nintendo DSi.
 
 ## Setup
 
-Build with BlocksDS + MbedTLS (see `BUILD-NOTES.txt`). Drop `cbox1.lua`
+Build with BlocksDS + MbedTLS (see `docs/build-notes.md`). Drop `cbox1.lua`
 and [rxi/json.lua](https://github.com/rxi/json.lua) next to the rom (don't forget the tls-ca-bundle.pem). You can duplicate the cbox script under cbox2, cbox3, etc. Make sure they're numbered sequentially. Edit `USER`/`KEY`/`ROOM`/`TAG` at the top of each cbox script.
 
 ---
