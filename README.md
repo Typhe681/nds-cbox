@@ -5,8 +5,8 @@ into a standalone auto-booting Cbox chat client for the Nintendo DSi.
 
 - Boots straight into `lua cbox1.lua`, no interactive shell
 - Shoulder buttons cycle between `cbox1.lua`, `cbox2.lua`, etc (different chat rooms)
-- Wifi uses `INIT_ONLY` instead of `WFC_CONNECT` — connect manually with `wifi connect <ssid> <pass>`,
-  since auto-connect will happily latch onto any open network with no internet
+- Wifi uses `INIT_ONLY` instead of `WFC_CONNECT` (may need to reconnect manually with `wifi connect <ssid> <pass>`,
+  since autoconnect will happily latch onto any open network with no internet)
 
 Original README below.
 
