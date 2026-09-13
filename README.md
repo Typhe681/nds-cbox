@@ -1,4 +1,16 @@
-# nds-shell
+# nds-cbox
+
+Fork of [nds-shell](https://github.com/trustytrojan/nds-shell) stripped down
+into a standalone auto-booting Cbox chat client for the Nintendo DSi.
+
+- Boots straight into `lua cbox1.lua`, no interactive shell
+- Shoulder buttons cycle between `cbox1.lua`, `cbox2.lua`, etc (different chat rooms)
+- Wifi uses `INIT_ONLY` instead of `WFC_CONNECT` — connect manually with `wifi connect <ssid> <pass>`,
+  since auto-connect will happily latch onto any open network with no internet
+
+Original README below.
+
+---
 
 [![Build](https://github.com/trustytrojan/nds-shell/actions/workflows/ci.yml/badge.svg)](https://github.com/trustytrojan/nds-shell/actions/workflows/ci.yml)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/trustytrojan/libavz)
@@ -43,17 +55,17 @@ This project supports both **devkitPro** and **BlocksDS** toolchains. Currently 
 1.  Install devkitPro Pacman following the [official installation guide](https://devkitpro.org/wiki/Getting_Started)
 2.  Install the `nds-dev` metapackage: `(dkp-)pacman -S nds-dev`
 3.  Clone the repository, configure, and build:
-    ```sh
+```sh
     cmake --preset dkp-release && cmake --build build -j
-    ```
+```
 
 ### BlocksDS
 1.  Install `wf-pacman` following the [official installation guide](https://wonderful.asie.pl/wiki/doku.php?id=getting_started)
 2.  Install the `blocksds-toolchain` package: `wf-pacman -S blocksds-toolchain`
 3.  Clone the repository, configure, and build:
-    ```sh
+```sh
     cmake --preset blocksds-release && cmake --build build -j
-    ```
+```
 
 ## Lua scripting notes
 - For JSON support, I recommend [rxi/json.lua](https://github.com/rxi/json.lua). It's extremely lightweight.
