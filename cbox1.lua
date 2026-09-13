@@ -1,13 +1,13 @@
 ---@diagnostic disable: undefined-global
 local ROOM_INDEX = 1
 
-local ROOM = ctx:GetEnv('ROOM', '')
-local TAG  = ctx:GetEnv('TAG', '')
-local USER = ctx:GetEnv('USER', '')
-local KEY  = ctx:GetEnv('KEY', '')
+local ROOM = ctx:GetEnv('ROOM', '') --from cbox url
+local TAG  = ctx:GetEnv('TAG', '') --also from url
+local USER = ctx:GetEnv('USER', '') --username of choice
+local KEY  = ctx:GetEnv('KEY', '') --to get this, go to the chatbox url (or inspect the iframe) and run this: cbx.gsUser.get('key')
 local VER  = ctx:GetEnv('VER', '1063')
-local PFP  = ctx:GetEnv('PFP',  '')
-local LINK = ctx:GetEnv('LINK', '')
+local PFP  = ctx:GetEnv('PFP',  '') --optional
+local LINK = ctx:GetEnv('LINK', '') --ditto
 
 local BASE  = 'https://www3.cbox.ws/box/?boxid=' .. ROOM .. '&boxtag=' .. TAG
 local WIDTH = 31
