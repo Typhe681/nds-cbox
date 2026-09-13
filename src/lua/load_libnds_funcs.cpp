@@ -2,22 +2,25 @@
 
 void my_state::load_libnds_funcs()
 {
-	// clang-format off
-	create_named_table("libnds",
-		"setBrightness", setBrightness, // this was just for testing, leave it in anyway for fun
-		"pmMainLoop",
+        // clang-format off
+        create_named_table("libnds",
+                "setBrightness", setBrightness, // this was just for testing, leave it in anyway for fun
+                "pmMainLoop",
 #ifdef __BLOCKSDS__
-		[] { return true; }
+                [] { return true; }
 #else
-		pmMainLoop
+                pmMainLoop
 #endif
-		,
-		"threadYield",
+                ,
+                "scanKeys", scanKeys,
+                "keysHeld", keysHeld,
+                "keysDown", keysDown,
+                "threadYield",
 #ifdef NDSH_THREADING
-		threadYield
+                threadYield
 #else
-		[] { swiWaitForVBlank(); }
+                [] { swiWaitForVBlank(); }
 #endif
-	);
-	// clang-format on
+        );
+        // clang-format on
 }

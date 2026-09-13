@@ -166,4 +166,10 @@ else()
 endif()
 
 ## turn the ELF into an NDS file
-nds_create_rom(nds-shell)
+nds_create_rom(nds-shell
+    OUTPUT cbox
+    NAME "nds-cbox"
+    SUBTITLE "cbox CLI client"
+    AUTHOR "typhe"
+    ICON "icon.gif"
+)
