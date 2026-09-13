@@ -7,10 +7,16 @@ into a standalone auto-booting Cbox chat client for the Nintendo DSi.
 - Shoulder buttons cycle between `cbox1.lua`, `cbox2.lua`, etc (different chat rooms)
 - Wifi uses `INIT_ONLY` instead of `WFC_CONNECT` (may need to reconnect manually with `wifi connect <ssid> <pass>`,
   since autoconnect will happily latch onto any open network with no internet)
+- Spinner shows while fetching
 
-Original README below.
+## Setup
+
+Build with BlocksDS + MbedTLS (see `BUILD-NOTES.txt`). Drop `cbox1.lua`
+and [rxi/json.lua](https://github.com/rxi/json.lua) next to the rom (don't forget the tls-ca-bundle.pem). You can duplicate the cbox script under cbox2, cbox3, etc. Make sure they're numbered sequentially. Edit `USER`/`KEY`/`ROOM`/`TAG` at the top of each cbox script.
 
 ---
+
+Original README below:
 
 [![Build](https://github.com/trustytrojan/nds-shell/actions/workflows/ci.yml/badge.svg)](https://github.com/trustytrojan/nds-shell/actions/workflows/ci.yml)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/trustytrojan/libavz)
