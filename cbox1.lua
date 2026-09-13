@@ -257,6 +257,7 @@ while libnds.pmMainLoop() do
                 prompt:printFullPrompt(true)
             end
         end
+        prompt:printFullPrompt(true)
     end
 
     if prompt.enterPressed then
