@@ -169,7 +169,7 @@ endif()
 nds_create_rom(nds-shell
     OUTPUT cbox
     NAME "nds-cbox"
-    SUBTITLE "cbox CLI client"
-    AUTHOR "typhe"
+    SUBTITLE "A cbox CLI client"
+    AUTHOR "built upon nds-shell"
     ICON "icon.gif"
 )
