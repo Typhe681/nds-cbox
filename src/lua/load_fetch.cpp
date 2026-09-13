@@ -105,7 +105,53 @@ void my_state::load_fetch()
 					curl_easy_cleanup(easy);
 				});
 #else
-			const auto rc = curl_easy_perform(easy);
+			CURLM *multi = curl_multi_init();
+			curl_multi_add_handle(multi, easy);
+
+			CURLcode rc = CURLE_OK;
+			int still_running = 1;
+			int frame = 0;
+			int last_idx = -1;
+			static const char spin[] = {'|', '/', '-', '\\'};
+
+			curl_multi_perform(multi, &still_running);
+
+			while (still_running && pmMainLoop())
+			{
+				int numfds = 0;
+				curl_multi_wait(multi, nullptr, 0, 0, &numfds);
+				curl_multi_perform(multi, &still_running);
+
+				if (still_running)
+				{
+					const int idx = (frame / 6) & 3;
+					if (idx != last_idx)
+					{
+						std::cout << '\r' << "\x1b[2K"
+						          << spin[idx] << ' '
+						          << std::flush;
+						last_idx = idx;
+					}
+					frame++;
+				}
+
+				swiWaitForVBlank();
+			}
+			std::cout << '\r' << "\x1b[2K" << std::flush;
+
+			CURLMsg *msg;
+			int msgs_left;
+			while ((msg = curl_multi_info_read(multi, &msgs_left)))
+			{
+				if (msg->msg == CURLMSG_DONE)
+				{
+					rc = msg->data.result;
+					break;
+				}
+			}
+
+			curl_multi_remove_handle(multi, easy);
+			curl_multi_cleanup(multi);
 
 			long response_code = 0;
 			curl_easy_getinfo(easy, CURLINFO_RESPONSE_CODE, &response_code);
