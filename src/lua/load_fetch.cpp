@@ -49,6 +49,8 @@ void my_state::load_fetch()
 
 			// url, method, body
 			curl_easy_setopt(easy, CURLOPT_URL, url.data());
+			curl_easy_setopt(easy, CURLOPT_CONNECTTIMEOUT, 10L);
+			curl_easy_setopt(easy, CURLOPT_TIMEOUT, 30L);
 			if (const auto method = opts["method"])
 				curl_easy_setopt(easy, CURLOPT_CUSTOMREQUEST, method.get<sol::string_view>().data());
 			if (const auto body = opts["body"])
