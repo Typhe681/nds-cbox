@@ -24,6 +24,8 @@ local frameCount  = 0
 local pollActive  = false
 local pollDone    = false
 local pollResult  = nil
+local wifiWasOk = true
+local prompt
 
 local function fileExists(path)
     local f = io.open(path, 'r')
@@ -173,7 +175,7 @@ local function startPoll()
 end
 
 local function post(text)
-    if KEY == '' then print('[post error] no KEY set'); return end
+    if KEY == '' then return 'no KEY set' end
     local body = 'aj=' .. VER
         .. '&lp=' .. tostring(lastId)
         .. '&pst=' .. urlenc(text)
@@ -189,13 +191,16 @@ local function post(text)
         body = body,
     })
     if r and r.body and r.body:sub(1, 1) == '0' then
-        print('[post error] ' .. r.body:sub(2))
+        return r.body:sub(2)
+    elseif not r or not r.body or r.code == 0 then
+        return 'post failed, no response'
     end
+    return nil
 end
 
 pcall(math.randomseed, os.time and os.time() or 1)
 
-print('connected to pseuchat')
+print('connected')
 
 do
     local r = fetchSync(BASE .. '&sec=ar&_v=' .. VER .. '&p=0')
@@ -216,9 +221,312 @@ do
             end
         end
     end
+Skip to content
+
+    Typhe681
+    nds-cbox
+
+Repository navigation
+
+    Code
+    Issues
+    Pull requests
+    Agents
+    Actions
+    Projects
+    Security and quality
+    Insights
+    Settings
+
+Files
+tT
+
+    docs
+    include
+    lua
+    src
+    .clang-format
+    .gitignore
+    CMakeLists.txt
+    CMakePresets.json
+    README.md
+    _codeql_detected_source_root
+    addr2line.sh
+    cbox1.lua
+    configure.sh
+    copy-to-melonds.sh
+    copy-to-sdcard.sh
+    emulate.sh
+    format.sh
+    icon.gif
+
+    nds-cbox
+
+/
+in
+main
+
+ @@ -24,6 +24,8 @@ local frameCount  = 0
+ local pollActive  = false
+	
+ local pollActive  = false
+ local pollDone    = false
+	
+ local pollDone    = false
+ local pollResult  = nil
+	
+ local pollResult  = nil
+	
+local wifiWasOk = true
+	
+local prompt
+ 
+	
+ 
+ local function fileExists(path)
+	
+ local function fileExists(path)
+     local f = io.open(path, 'r')
+	
+     local f = io.open(path, 'r')
+ @@ -173,7 +175,7 @@ local function startPoll()
+ end
+	
+ end
+ 
+	
+ 
+ local function post(text)
+	
+ local function post(text)
+    if KEY == '' then print('[post error] no KEY set'); return end
+	
+    if KEY == '' then return 'no KEY set' end
+     local body = 'aj=' .. VER
+	
+     local body = 'aj=' .. VER
+         .. '&lp=' .. tostring(lastId)
+	
+         .. '&lp=' .. tostring(lastId)
+         .. '&pst=' .. urlenc(text)
+	
+         .. '&pst=' .. urlenc(text)
+ @@ -189,13 +191,16 @@ local function post(text)
+         body = body,
+	
+         body = body,
+     })
+	
+     })
+     if r and r.body and r.body:sub(1, 1) == '0' then
+	
+     if r and r.body and r.body:sub(1, 1) == '0' then
+        print('[post error] ' .. r.body:sub(2))
+	
+        return r.body:sub(2)
+	
+    elseif not r or not r.body or r.code == 0 then
+	
+        return 'post failed, no response'
+     end
+	
+     end
+	
+    return nil
+ end
+	
+ end
+ 
+	
+ 
+ pcall(math.randomseed, os.time and os.time() or 1)
+	
+ pcall(math.randomseed, os.time and os.time() or 1)
+ 
+	
+ 
+print('connected to pseuchat')
+	
+print('connected')
+ 
+	
+ 
+ do
+	
+ do
+     local r = fetchSync(BASE .. '&sec=ar&_v=' .. VER .. '&p=0')
+	
+     local r = fetchSync(BASE .. '&sec=ar&_v=' .. VER .. '&p=0')
+ @@ -218,7 +223,7 @@ do
+     end
+	
+     end
+ end
+	
+ end
+ 
+	
+ 
+local prompt = CliPrompt.new('> ')
+	
+prompt = CliPrompt.new('> ')
+ prompt:printFullPrompt(false)
+	
+ prompt:printFullPrompt(false)
+ prompt:prepareForNextLine()
+	
+ prompt:prepareForNextLine()
+ 
+	
+ 
+ @@ -249,29 +254,50 @@ while libnds.pmMainLoop() do
+         pollActive = false
+	
+         pollActive = false
+         local r = pollResult
+	
+         local r = pollResult
+         pollResult = nil
+	
+         pollResult = nil
+        if r and r.body and #r.body > 0 and r.body:sub(1, 1) ~= '0' then
+	
+
+            local fresh = extractNewMessages(r.body)
+	
+        local ok = r and r.body and r.code and r.code > 0
+            if #fresh > 0 then
+	
+        if not ok then
+	
+            if wifiWasOk then
+	
+                io.write('\r\x1b[2K')
+	
+                print('\x1b[91mwifi error, retrying...\x1b[39m')
+	
+            end
+	
+            wifiWasOk = false
+	
+            ctx.shell:run('wifi dis')
+	
+            ctx.shell:run('wifi auto')
+	
+        else
+	
+            if not wifiWasOk then
+                 io.write('\r\x1b[2K')
+	
+                 io.write('\r\x1b[2K')
+                for _, m in ipairs(fresh) do printMessage(m.name, m.body) end
+	
+                print('\x1b[92mwifi reconnected\x1b[39m')
+                prompt:printFullPrompt(true)
+	
+            end
+	
+            wifiWasOk = true
+	
+            if r.body:sub(1, 1) ~= '0' then
+	
+                local fresh = extractNewMessages(r.body)
+	
+                if #fresh > 0 then
+	
+                    io.write('\r\x1b[2K')
+	
+                    for _, m in ipairs(fresh) do printMessage(m.name, m.body) end
+	
+                end
+             end
+	
+             end
+         end
+	
+         end
+         prompt:printFullPrompt(true)
+	
+         prompt:printFullPrompt(true)
+     end
+	
+     end
+ 
+	
+ 
+     if prompt.enterPressed then
+	
+     if prompt.enterPressed then
+         local msg = prompt.input
+	
+         local msg = prompt.input
+	
+        prompt:prepareForNextLine()
+	
+        io.write('\x1b[A\r\x1b[0K')
+	
+
+         if msg and #msg > 0 then
+	
+         if msg and #msg > 0 then
+             if pollActive then
+	
+             if pollActive then
+                 pollActive = false
+	
+                 pollActive = false
+                 pollDone = false
+	
+                 pollDone = false
+                 pollResult = nil
+	
+                 pollResult = nil
+             end
+	
+             end
+            post(msg)
+	
+            local err = post(msg)
+	
+            if err then
+	
+                print('\x1b[91m' .. err .. '\x1b[39m')
+	
+            end
+         end
+	
+         end
+        prompt:prepareForNextLine()
+	
+
+        io.write('\x1b[A\r\x1b[0K')
+	
+         prompt:printFullPrompt(false)
+	
+         prompt:printFullPrompt(false)
+     end
+	
+     end
+ 
+	
+ 
+ @@ -281,4 +307,4 @@ while libnds.pmMainLoop() do
+     end
+	
+     end
+ 
+	
+ 
+     ::continue::
+	
+     ::continue::
+end
+	
+end
+Editing nds-cbox/cbox1.lua at main · Typhe681/nds-cbox
 end
 
-local prompt = CliPrompt.new('> ')
+prompt = CliPrompt.new('> ')
 prompt:printFullPrompt(false)
 prompt:prepareForNextLine()
 
@@ -249,12 +557,28 @@ while libnds.pmMainLoop() do
         pollActive = false
         local r = pollResult
         pollResult = nil
-        if r and r.body and #r.body > 0 and r.body:sub(1, 1) ~= '0' then
-            local fresh = extractNewMessages(r.body)
-            if #fresh > 0 then
+
+        local ok = r and r.body and r.code and r.code > 0
+        if not ok then
+            if wifiWasOk then
                 io.write('\r\x1b[2K')
-                for _, m in ipairs(fresh) do printMessage(m.name, m.body) end
-                prompt:printFullPrompt(true)
+                print('\x1b[91mwifi error, retrying...\x1b[39m')
+            end
+            wifiWasOk = false
+            ctx.shell:run('wifi dis')
+            ctx.shell:run('wifi auto')
+        else
+            if not wifiWasOk then
+                io.write('\r\x1b[2K')
+                print('\x1b[92mwifi reconnected\x1b[39m')
+            end
+            wifiWasOk = true
+            if r.body:sub(1, 1) ~= '0' then
+                local fresh = extractNewMessages(r.body)
+                if #fresh > 0 then
+                    io.write('\r\x1b[2K')
+                    for _, m in ipairs(fresh) do printMessage(m.name, m.body) end
+                end
             end
         end
         prompt:printFullPrompt(true)
@@ -262,16 +586,21 @@ while libnds.pmMainLoop() do
 
     if prompt.enterPressed then
         local msg = prompt.input
+        prompt:prepareForNextLine()
+        io.write('\x1b[A\r\x1b[0K')
+
         if msg and #msg > 0 then
             if pollActive then
                 pollActive = false
                 pollDone = false
                 pollResult = nil
             end
-            post(msg)
+            local err = post(msg)
+            if err then
+                print('\x1b[91m' .. err .. '\x1b[39m')
+            end
         end
-        prompt:prepareForNextLine()
-        io.write('\x1b[A\r\x1b[0K')
+
         prompt:printFullPrompt(false)
     end
 
